@@ -28,3 +28,23 @@ class HTMLNode():
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
+
+class LeafNode(HTMLNode):
+    def __init__(self, tag: str, value: str, props=None):
+        super.__init__(self, tag, value, props)
+
+    def to_html(self):
+        if not self.value:
+            raise ValueError("Leaf Node has no 'value' attribute.")
+        elif not isinstance(self.value, str):
+            raise TypeError("Value is not a string.")
+        elif not self.tag:
+            return self.value
+
+        if self.tag == "p":
+            return f"<p>{self.value}<\p>"
+        elif self.tag == "a":
+            return f"<a{self.props_to_html}>{self.value}<\a>"
+
+    def __repr__(self):
+        return f"HTMLNode({self.tag}, {self.value}, {self.props})"

@@ -28,7 +28,7 @@ class TestHTMLNode(unittest.TestCase):
         node2_props = node2.props_to_html()
         self.assertEqual(node_props, node2_props)
     """
-    def test_props_to_html(self):
+    def test_props_to_html(self): #raises TypeError
         props = [
             "href https://ww.google.com",
             "target _blank"
@@ -40,5 +40,9 @@ class TestHTMLNode(unittest.TestCase):
         node2_props = node2.props_to_html()
         self.assertEqual(node_props, node2_props)
     """
+
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
 
 
