@@ -15,15 +15,17 @@ class HTMLNode():
         raise NotImplementedError
 
     def props_to_html(self):
-        if self.props == "" or self.props == None:
+        if not self.props:
             return ""
         elif not isinstance(self.props, dict):
             raise TypeError("Incorrect 'props' type.")
 
         #parse props dictionary
         props_str: str = ""
-        for key in self.props:
-            props_str += f" {key}={self.props[key]}"
+        for key, val in self.props.items():
+            if self.props[key] == None:
+                continue
+            props_str += f' {key}="{val}"'
         return props_str
 
     def __repr__(self):
@@ -31,7 +33,7 @@ class HTMLNode():
 
 class LeafNode(HTMLNode):
     def __init__(self, tag: str, value: str, props=None):
-        super.__init__(self, tag, value, props)
+        super().__init__(tag, value, None, props)
 
     def to_html(self):
         if not self.value:
@@ -41,10 +43,7 @@ class LeafNode(HTMLNode):
         elif not self.tag:
             return self.value
 
-        if self.tag == "p":
-            return f"<p>{self.value}<\p>"
-        elif self.tag == "a":
-            return f"<a{self.props_to_html}>{self.value}<\a>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.props})"
