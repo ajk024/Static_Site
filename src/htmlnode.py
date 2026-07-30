@@ -37,7 +37,7 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if not self.value:
-            raise ValueError("Leaf Node has no 'value' attribute.")
+            raise ValueError("LeafNode has no 'value' argument.")
         elif not isinstance(self.value, str):
             raise TypeError("Value is not a string.")
         elif not self.tag:
@@ -47,3 +47,20 @@ class LeafNode(HTMLNode):
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.props})"
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag: str, children: list[HTMLNode], props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if not self.tag:
+            raise ValueError("ParentNode has no 'value' argument.")
+        elif not self.children:
+            raise ValueError("ParentNode has no 'children' argument")
+
+        html_str: str = f"<{self.tag}>"
+        for node in self.children:
+            html_str += node.to_html()
+            
+        html_str += f"</{self.tag}>"
+        return html_str
