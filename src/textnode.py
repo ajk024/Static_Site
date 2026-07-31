@@ -28,7 +28,10 @@ class TextNode:
         return False
 
     def __repr__(self):
-        return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+        if self.url:
+            return f'TextNode("{self.text}", {self.text_type}, "{self.url}")'
+        else:
+            return f'TextNode("{self.text}", {self.text_type}, {self.url})'
 
 def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     if text_node.text_type not in TextType:
