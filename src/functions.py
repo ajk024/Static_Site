@@ -33,14 +33,17 @@ def split_nodes_delimiter(old_nodes: list[TextNode],
                 new_list.append(TextNode(text, node.text_type))
         else:
             new_list.append(node)
-
     return new_list
 
 def extract_markdown_images(text: str) -> list[tuple[str]]:
     alt_matches = re.findall(r"\[(.*?)\]", text)
     url_matches = re.findall(r"\((.*?)\)", text)
-    print(alt_matches)
-    print(url_matches)
     matches = list(zip(alt_matches, url_matches))
+    #matches = [(f'"{alt}"', f'"{url}"') for alt, url in zip(alt_matches, url_matches)]
+    return matches
 
+def extract_markdown_links(text: str) -> list[tuple[str]]:
+    anchor_matches = re.findall(r"\[(.*?)]", text)
+    url_matches = re.findall(r"\((.*?)\)", text)
+    matches = list(zip(anchor_matches, url_matches))
     return matches

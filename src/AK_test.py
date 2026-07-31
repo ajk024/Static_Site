@@ -63,17 +63,12 @@ elif test_num == 1:
 elif test_num == 2:
     node = TextNode("This is text with a `code block` word", TextType.TEXT)
     new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-
     print(new_nodes)
 
 elif test_num == 3:
     text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
     print(extract_markdown_images(text))
-    answer = [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")]
+
     
-    if text == answer:
-        print("MATCH")
-    else:
-        raise Exception(f"text does not match answer.")
    
     

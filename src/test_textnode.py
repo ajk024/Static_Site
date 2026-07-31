@@ -24,13 +24,9 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_eq_4(self):
-            node = TextNode("Testing a text node", TextType.ITALIC, None)
-            node2 = TextNode("Testing a text node", TextType.LINK, None)
-            self.assertNotEqual(node, node2)
-
-    
-    
-
+        node = TextNode("Testing a text node", TextType.ITALIC, None)
+        node2 = TextNode("Testing a text node", TextType.LINK, None)
+        self.assertNotEqual(node, node2)
 
 if __name__ == "__main__":
     unittest.main()
