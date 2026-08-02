@@ -5,11 +5,11 @@ from htmlnode import *
 
 class TextType(Enum):
     TEXT = "raw text"
-    BOLD = "bold text"
-    ITALIC = "italic"
-    CODE = "code text"
-    LINK = "link"
-    IMAGE = "image"
+    BOLD = "bold" #**
+    ITALIC = "italic" #_
+    CODE = "code text" #```
+    LINK = "link" #[]()
+    IMAGE = "image" #![]()
     
 
 class TextNode:
@@ -28,10 +28,7 @@ class TextNode:
         return False
 
     def __repr__(self):
-        if self.url:
-            return f'TextNode("{self.text}", {self.text_type}, "{self.url}")'
-        else:
-            return f'TextNode("{self.text}", {self.text_type}, {self.url})'
+        return f"TextNode({self.text}, {self.text_type}, {self.url})"
 
 def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     if text_node.text_type not in TextType:
@@ -60,9 +57,6 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             "alt": text_node.text
         }
         new_leaf = LeafNode("img", text_node.text, prop)
-
-
-
     return new_leaf
 
     

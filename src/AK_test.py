@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import pprint
 
 # Add parent directory to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -8,7 +9,7 @@ from htmlnode import *
 from textnode import *
 from functions import *
 
-test_num: int = 3
+test_num: int = 5
 
 if test_num == 0:
     node = ParentNode(
@@ -20,9 +21,6 @@ if test_num == 0:
             LeafNode(None, "Normal text"),
         ],
     )
-
-
-
     a = node.to_html()
     print(a)
     #print(type(node))
@@ -30,10 +28,12 @@ if test_num == 0:
 
 elif test_num == 1:
     node = TextNode("Testing text node", TextType.TEXT)
-    html_node = text_node_to_html_node(node)
-    print(html_node)
-    print(html_node.to_html())
-
+    print(node)
+    print(node.text)
+    #html_node = text_node_to_html_node(node)
+    #print(html_node)
+    #print(html_node.to_html())
+    """
     node = TextNode("Testing bold node", TextType.BOLD)
     html_node = text_node_to_html_node(node)
     print(html_node)
@@ -49,16 +49,17 @@ elif test_num == 1:
     print(html_node)
     print(html_node.to_html())
 
-    """
+    
     node = TextNode("Testing link node", TextType.LINK)
     html_node = text_node_to_html_node(node)
     print(html_node)
-    """
+    
 
     node = TextNode("Testing image node", TextType.IMAGE, "www.image.com")
     html_node = text_node_to_html_node(node)
     print(html_node)
     print(html_node.to_html())
+    """
 
 elif test_num == 2:
     node = TextNode("This is text with a `code block` word", TextType.TEXT)
@@ -69,6 +70,20 @@ elif test_num == 3:
     text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
     print(extract_markdown_images(text))
 
-    
+elif test_num == 4:
+    text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+    node = TextNode(text, TextType.TEXT)
+    a = split_nodes_image([node])
+    #pprint.pprint(a, width=1)
+
+    text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+    node = TextNode(text, TextType.TEXT)
+    a = split_nodes_link([node])
+    pprint.pprint(a, width=1)
    
-    
+elif test_num == 5:
+    #text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+    text = "This is **bold** and some _italic_ text here."
+
+    a = text_to_textnodes(text)
+    pprint.pprint(a)
