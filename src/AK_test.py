@@ -83,7 +83,9 @@ elif test_num == 4:
    
 elif test_num == 5:
     #text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-    text = "This is **bold** and some _italic_ text here."
+    #text = "This is **bold** and some _italic_ and more **second bold** and here is some `code block` and even more **bold** text here."
+    #text = "and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+    text_1 = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
 
-    a = text_to_textnodes(text)
+    a = text_to_textnodes(text + text_1)
     pprint.pprint(a)

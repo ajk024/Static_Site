@@ -7,7 +7,7 @@ class TextType(Enum):
     TEXT = "raw text"
     BOLD = "bold" #**
     ITALIC = "italic" #_
-    CODE = "code text" #```
+    CODE = "code" #`
     LINK = "link" #[]()
     IMAGE = "image" #![]()
     
