@@ -7,9 +7,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from htmlnode import *
 from textnode import *
-from functions import *
+from projects.Static_Site.src.functions import *
 
-test_num: int = 5
+test_num: int = 6
 
 if test_num == 0:
     node = ParentNode(
@@ -92,3 +92,17 @@ elif test_num == 5:
 
     a = text_to_textnodes(text)
     pprint.pprint(a)
+
+elif test_num == 6:
+    md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+"""
+
+    a = markdown_to_blocks(md)
+    print(a)

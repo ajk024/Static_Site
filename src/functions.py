@@ -2,47 +2,6 @@ from textnode import *
 import re
 import pprint
 
-def split_nodes_delimiter(old_nodes: list[TextNode],
-                          delimiter: str,
-                          text_type: TextType) -> list[TextNode]:
-    new_list: list[TextNode] = []
-    text: str = ""
-    i: int = 0
-
-    for node in old_nodes:
-        if node.text_type != TextType.TEXT:
-            new_list.append(node)
-        else:
-            while i < len(node.text):
-                if node.text[i] == delimiter: #end of text before delimiter #just one character
-                    new_list.append(TextNode(text, node.text_type))
-                    text = ""
-
-                    if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
-                        i += 2 #advance a total of 2 for "**"
-                    elif node.text[i] == "_" or node.text[i] == "`":
-                        i += 1
-
-                    while node.text[i] != delimiter:
-                        text += node.text[i]
-                        i += 1
-
-                    new_list.append(TextNode(text, text_type))
-                    text = ""
-
-                    if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
-                        i += 2
-                    elif node.text[i] == "_" or node.text[i] == "`":
-                        i += 1
-                else:
-                    text += node.text[i]
-                    i += 1
-
-            new_list.append(TextNode(text, node.text_type))
-            i = 0
-            text = ""
-    return new_list
-
 def text_to_textnodes(text: str) -> list[TextNode]:
     new_list: list[TextNode] = [TextNode(text, TextType.TEXT)]
     i: int = 0
@@ -90,11 +49,46 @@ def text_to_textnodes(text: str) -> list[TextNode]:
             i += 1
     return new_list
 
-def extract_markdown_images(text: str) -> list[tuple[str]]:
-    return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+def split_nodes_delimiter(old_nodes: list[TextNode],
+                          delimiter: str,
+                          text_type: TextType) -> list[TextNode]:
+    new_list: list[TextNode] = []
+    text: str = ""
+    i: int = 0
 
-def extract_markdown_links(text: str) -> list[tuple[str]]:
-    return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_list.append(node)
+        else:
+            while i < len(node.text):
+                if node.text[i] == delimiter: #end of text before delimiter #just one character
+                    new_list.append(TextNode(text, node.text_type))
+                    text = ""
+
+                    if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
+                        i += 2 #advance a total of 2 for "**"
+                    elif node.text[i] == "_" or node.text[i] == "`":
+                        i += 1
+
+                    while node.text[i] != delimiter:
+                        text += node.text[i]
+                        i += 1
+
+                    new_list.append(TextNode(text, text_type))
+                    text = ""
+
+                    if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
+                        i += 2
+                    elif node.text[i] == "_" or node.text[i] == "`":
+                        i += 1
+                else:
+                    text += node.text[i]
+                    i += 1
+
+            new_list.append(TextNode(text, node.text_type))
+            i = 0
+            text = ""
+    return new_list
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     new_list: list[TextNode] = []
@@ -157,3 +151,16 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
                     text += node.text[i]
                     i += 1
     return new_list
+
+def extract_markdown_images(text: str) -> list[tuple[str]]:
+    return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+def extract_markdown_links(text: str) -> list[tuple[str]]:
+    return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+def markdown_to_blocks(markdown: str) -> list[str]:
+    blocks: list[str] = markdown.split("\n\n")
+
+    for i in range (len(blocks)):
+        blocks[i] = blocks[i].strip("\n")
+    return blocks
