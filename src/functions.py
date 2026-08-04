@@ -68,18 +68,26 @@ def text_to_textnodes(text: str) -> list[TextNode]:
             i += 1
         elif text[i] == "!": #image
             image_list: list[tuple[str]] = extract_markdown_images(text[i:]) #determine if there are valid images
+      
             if len(image_list) > 0:
                 new_list = split_nodes_image(new_list)
-                while i < len(text) and 
+                while i < len(text) and text[i] != ")":
+                    i += 1 
+                i += 1
+            else:
+                i += 1
+        elif text[i] == "[": #link
+            link_list: list[tuple[str]] = extract_markdown_links(text[i:]) #determine if there are valid links
+
+            if len(link_list) > 0:
+                new_list = split_nodes_link(new_list)
+                while i < len(text) and text[i] != ")":
+                    i += 1
+                i += 1
             else:
                 i += 1
         else:
             i += 1
-
-
-
-   
-
     return new_list
 
 def extract_markdown_images(text: str) -> list[tuple[str]]:
@@ -101,8 +109,19 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
         else:
             while i < len(node.text):
                 if node.text[i] == "!":
-                    new_list.append(TextNode(text, node.text_type))
-                    new_list.append(TextNode(image_list[0][0], TextType.IMAGE, image_list[0][1]))
+                    if len(text) > 0:
+                        new_list.append(TextNode(text, node.text_type)) #text before image
+                    new_list.append(TextNode(image_list[0][0], TextType.IMAGE, image_list[0][1])) #image
+
+                    while i < len(node.text) and node.text[i] != ")":
+                        i += 1
+                    i += 1
+
+                    if len(node.text[i:]) > 0: #text remaining in node
+                        new_list.append(TextNode(node.text[i:], node.text_type)) #text after image
+                    i = 0
+                    text = ""
+                    break  
                 else:
                     text += node.text[i]
                     i += 1       
@@ -114,31 +133,27 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     i: int = 0
 
     for node in old_nodes:
-        if node.text_type == TextType.TEXT:
-            link_list: list[tuple[str]] = extract_markdown_links(node.text)
+        link_list: list[tuple[str]] = extract_markdown_links(node.text)
 
+        if node.text_type != TextType.TEXT or len(link_list) == 0:
+            new_list.append(node)
+        else:
             while i < len(node.text):
-                if node.text[i] != "[":
-                    text += node.text[i]
-                    i += 1
-                elif node.text[i] == "[":
-                    i += 1
+                if node.text[i] == "[":
+                    if len(text) > 0:
+                        new_list.append(TextNode(text, node.text_type))
+                    new_list.append(TextNode(link_list[0][0], TextType.LINK, link_list[0][1])) #link
+
                     while i < len(node.text) and node.text[i] != ")":
                         i += 1
                     i += 1
 
-                    new_list.append(TextNode(text, node.text_type))
-                    new_list.append(TextNode(link_list[0][0], TextType.LINK, link_list[0][1]))
+                    if len(node.text[i:]) > 0: #text remaining in node
+                        new_list.append(TextNode(node.text[i:], node.text_type)) #text after image
+                    i = 0
                     text = ""
-
-                    while i < len(node.text) and node.text[i] != "[":
-                        text += node.text[i]
-                        i += 1
-
-                    new_list.append(TextNode(text, node.text_type))
-                    new_list.append(TextNode(link_list[1][0], TextType.LINK, link_list[1][1]))
                     break
-        else:
-            raise Exception("TextType is not TEXT")
+                else:
+                    text += node.text[i]
+                    i += 1
     return new_list
-
