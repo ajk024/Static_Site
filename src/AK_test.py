@@ -1,15 +1,12 @@
 import sys
-from pathlib import Path
 import pprint
-
-# Add parent directory to sys.path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 from htmlnode import *
 from textnode import *
-from projects.Static_Site.src.functions import *
+from functions import *
+from block_functions import *
+#from ..src import *
 
-test_num: int = 6
+test_num: int = 7
 
 if test_num == 0:
     node = ParentNode(
@@ -105,4 +102,12 @@ This is the same paragraph on a new line
 """
 
     a = markdown_to_blocks(md)
+    print(a)
+
+elif test_num == 7:
+    md = """```
+some code here
+```
+"""
+    a = block_to_block_type(md)
     print(a)

@@ -2,21 +2,21 @@ import unittest
 from functions import *
 
 
-class TestExtractMarkdownImages(unittest.TestCase):
+class Test_12(unittest.TestCase):
     def test_extract_markdown_images_1(self):
         text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
         node = extract_markdown_images(text)
         answer = [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")]
         self.assertEqual(node, answer)
 
-class TestExtractMarkdownLinks(unittest.TestCase):
+class Test_13(unittest.TestCase):
     def test_extract_markdown_links(self):
         text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
         node = extract_markdown_links(text)
         answer = [("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")]
         self.assertEqual(node, answer)
 
-class TestMarkdownToBlocks(unittest.TestCase):
+class Test_14(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
 This is **bolded** paragraph
