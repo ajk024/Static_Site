@@ -6,7 +6,7 @@ from functions import *
 from block_functions import *
 #from ..src import *
 
-test_num: int = 7
+test_num: int = 9
 
 if test_num == 0:
     node = ParentNode(
@@ -108,6 +108,31 @@ elif test_num == 7:
     md = """```
 some code here
 ```
+"""
+    a = block_to_block_type(md)
+    print(a)
+
+elif test_num == 8: #unordered list
+    md = """- Item 1
+- Item 2
+- Item 3
+- Item 4
+"""
+    a = block_to_block_type(md)
+    print(a)
+
+    md = """- Item 1
+- Item 2
+- Item 3
+-
+"""
+    a = block_to_block_type(md)
+    print(a)
+
+elif test_num == 9: #ordered list
+    md = """1. Item 1
+2. Item 2
+3. Item 3
 """
     a = block_to_block_type(md)
     print(a)
