@@ -6,7 +6,7 @@ from functions import *
 from block_functions import *
 #from ..src import *
 
-test_num: int = 9
+test_num: int = 10
 
 if test_num == 0:
     node = ParentNode(
@@ -136,3 +136,17 @@ elif test_num == 9: #ordered list
 """
     a = block_to_block_type(md)
     print(a)
+
+elif test_num == 10: 
+    md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+    node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)

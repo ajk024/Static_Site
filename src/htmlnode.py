@@ -54,7 +54,7 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if not self.tag:
-            raise ValueError("ParentNode has no 'value' argument.")
+            raise ValueError("ParentNode has no 'tag' argument.")
         elif not self.children:
             raise ValueError("ParentNode has no 'children' argument")
 

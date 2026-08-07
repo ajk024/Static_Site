@@ -1,4 +1,5 @@
 from textnode import *
+from block_functions import *
 import re
 import pprint
 
@@ -165,3 +166,33 @@ def markdown_to_blocks(markdown: str) -> list[str]:
         #strip "\n" and whitespace
         blocks[i] = blocks[i].strip("\n").strip()
     return blocks
+
+
+
+def markdown_to_html_node(markdown: str) -> HTMLNode:
+    blocks = markdown_to_blocks(markdown)
+    children: list[HTMLNode] = []
+
+    for block in blocks:
+        if not block: #block is empty
+            continue
+
+        block_type: BlockType = block_to_block_type(block)
+        #print(block_type)
+
+        if block_type == BlockType.PARAGRAPH:
+            new_block: str = block.replace("\n", " ")
+            children: list[HTMLNode] = text_to_children(new_block)
+            print(f"children: {children}")
+
+            html_node = ParentNode("p", children)
+            #print(f"html_node: {html_node}")
+    return html_node
+
+def text_to_children(text: str) -> list[HTMLNode]:
+    leaf_node_list: list[LeafNode] = []
+
+    for node in text_to_textnodes(text):
+        leaf_node: LeafNode = text_node_to_html_node(node)
+        leaf_node_list.append(leaf_node)
+    return leaf_node_list
