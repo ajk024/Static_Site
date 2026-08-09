@@ -170,29 +170,46 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 
 
 def markdown_to_html_node(markdown: str) -> HTMLNode:
-    blocks = markdown_to_blocks(markdown)
-    children: list[HTMLNode] = []
+    blocks: list[str] = markdown_to_blocks(markdown)
+    #children: list[HTMLNode] = []
+    parent_nodes: list[ParentNode] = []
+    print(len(blocks))
 
     for block in blocks:
         if not block: #block is empty
             continue
 
         block_type: BlockType = block_to_block_type(block)
-        #print(block_type)
 
         if block_type == BlockType.PARAGRAPH:
-            new_block: str = block.replace("\n", " ")
-            children: list[HTMLNode] = text_to_children(new_block)
-            print(f"children: {children}")
+            children: list[LeafNode] = text_to_children(block.replace("\n", " "))
+            #print(f"children: {children}")
+            parent_nodes.append(ParentNode("p", children))
+        elif block_type == BlockType.CODE:
+            print(block)
+            code: str = parse_code_block(block)
+            #parent_nodes.append(ParentNode("code", code))
 
-            html_node = ParentNode("p", children)
-            #print(f"html_node: {html_node}")
+    #pprint.pprint(parent_nodes)
+
+    html_node: ParentNode = ParentNode("div", parent_nodes)
+    #pprint.pprint(html_node)
+
     return html_node
 
-def text_to_children(text: str) -> list[HTMLNode]:
+def text_to_children(text: str) -> list[LeafNode]:
     leaf_node_list: list[LeafNode] = []
 
     for node in text_to_textnodes(text):
         leaf_node: LeafNode = text_node_to_html_node(node)
         leaf_node_list.append(leaf_node)
     return leaf_node_list
+
+def parse_code_block(text: str) -> str:
+    code: str = ""
+
+    for i in range (len(text)):
+        if text[i] != "`":
+            code += text[i]
+    #print(code)
+    return code

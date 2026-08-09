@@ -6,7 +6,7 @@ from functions import *
 from block_functions import *
 #from ..src import *
 
-test_num: int = 10
+test_num: int = 11
 
 if test_num == 0:
     node = ParentNode(
@@ -150,3 +150,12 @@ This is another paragraph with _italic_ text and `code` here
     node = markdown_to_html_node(md)
     html = node.to_html()
     print(html)
+
+elif test_num == 11:
+    md = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+    node = markdown_to_html_node(md)
