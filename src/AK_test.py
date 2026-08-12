@@ -6,9 +6,9 @@ from functions import *
 from block_functions import *
 #from ..src import *
 
-test_num: int = 11
+test: int = 14
 
-if test_num == 0:
+if test == 0:
     node = ParentNode(
         "p",
         [
@@ -23,7 +23,7 @@ if test_num == 0:
     #print(type(node))
     #print(type(node).__name__)
 
-elif test_num == 1:
+elif test == 1:
     node = TextNode("Testing text node", TextType.TEXT)
     print(node)
     print(node.text)
@@ -58,16 +58,16 @@ elif test_num == 1:
     print(html_node.to_html())
     """
 
-elif test_num == 2:
+elif test == 2:
     node = TextNode("This is text with a `code block` word", TextType.TEXT)
     new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
     print(new_nodes)
 
-elif test_num == 3:
+elif test == 3:
     text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
     print(extract_markdown_images(text))
 
-elif test_num == 4:
+elif test == 4:
     text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
     node = TextNode(text, TextType.TEXT)
     a = split_nodes_image([node])
@@ -78,7 +78,7 @@ elif test_num == 4:
     a = split_nodes_link([node])
     pprint.pprint(a, width=1)
    
-elif test_num == 5:
+elif test == 5:
     text_1 = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
     text_2 = "This is **bold** and some _italic_ and more **second bold** and here is some `code block` and even more **bold** text here."
     text_3 = "and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
@@ -90,7 +90,7 @@ elif test_num == 5:
     a = text_to_textnodes(text)
     pprint.pprint(a)
 
-elif test_num == 6:
+elif test == 6:
     md = """
 This is **bolded** paragraph
 
@@ -104,7 +104,7 @@ This is the same paragraph on a new line
     a = markdown_to_blocks(md)
     print(a)
 
-elif test_num == 7:
+elif test == 7:
     md = """```
 some code here
 ```
@@ -112,7 +112,7 @@ some code here
     a = block_to_block_type(md)
     print(a)
 
-elif test_num == 8: #unordered list
+elif test == 8: #unordered list
     md = """- Item 1
 - Item 2
 - Item 3
@@ -129,7 +129,7 @@ elif test_num == 8: #unordered list
     a = block_to_block_type(md)
     print(a)
 
-elif test_num == 9: #ordered list
+elif test == 9: #ordered list
     md = """1. Item 1
 2. Item 2
 3. Item 3
@@ -137,7 +137,7 @@ elif test_num == 9: #ordered list
     a = block_to_block_type(md)
     print(a)
 
-elif test_num == 10: 
+elif test == 10: 
     md = """
 This is **bolded** paragraph
 text in a p
@@ -151,7 +151,7 @@ This is another paragraph with _italic_ text and `code` here
     html = node.to_html()
     print(html)
 
-elif test_num == 11:
+elif test == 11:
     md = """
 ```
 This is text that _should_ remain
@@ -159,3 +159,32 @@ the **same** even with inline stuff
 ```
 """
     node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)
+
+elif test == 12:
+    md = """- Item 1
+- Item 2
+- Item 3
+- Item 4
+"""
+
+    node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)
+
+elif test == 13:
+    md = """1. Item 1
+2. Item 2
+3. Item 3
+"""
+    node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)
+
+elif test == 14:
+    md = "### Heading 3"
+
+    node = markdown_to_html_node(md)
+    html = node.to_html()
+    print(html)

@@ -171,9 +171,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 
 def markdown_to_html_node(markdown: str) -> HTMLNode:
     blocks: list[str] = markdown_to_blocks(markdown)
-    #children: list[HTMLNode] = []
     parent_nodes: list[ParentNode] = []
-    print(len(blocks))
 
     for block in blocks:
         if not block: #block is empty
@@ -185,22 +183,29 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
             children: list[LeafNode] = text_to_children(block.replace("\n", " "))
             #print(f"children: {children}")
             parent_nodes.append(ParentNode("p", children))
-        elif block_type == BlockType.CODE:
-            print(block)
-            code: str = parse_code_block(block)
-            #parent_nodes.append(ParentNode("code", code))
-
-    #pprint.pprint(parent_nodes)
-
+        elif block_type == BlockType.CODE: #do not use text_to_textnodes b/c code should remain as-is
+            leaf_node: LeafNode = text_node_to_html_node(TextNode(parse_code_block(block), TextType.CODE))
+            parent_nodes.append(ParentNode("pre", [leaf_node]))
+        elif block_type == BlockType.QUOTE:
+            children: list[LeafNode] = text_to_children(block)
+            parent_nodes.append(ParentNode("blockquote", children))
+        elif block_type == BlockType.UNORDERED_LIST:
+            children: list[LeafNode] = text_to_children(parse_ul_block(block))
+            parent_nodes.append(ParentNode("ul", children))
+        elif block_type == BlockType.ORDERED_LIST:
+            children: list[LeafNode] = text_to_children(parse_ol_block(block))
+            parent_nodes.append(ParentNode("ol", children))
+        elif block_type == BlockType.HEADING:
+            heading_tag: str = parse_heading(block)
+            children: list[LeafNode] = text_to_children(block)
+            parent_nodes.append(ParentNode(heading_tag, children))
     html_node: ParentNode = ParentNode("div", parent_nodes)
-    #pprint.pprint(html_node)
-
     return html_node
 
 def text_to_children(text: str) -> list[LeafNode]:
     leaf_node_list: list[LeafNode] = []
 
-    for node in text_to_textnodes(text):
+    for node in text_to_textnodes(text): #list of TextNode
         leaf_node: LeafNode = text_node_to_html_node(node)
         leaf_node_list.append(leaf_node)
     return leaf_node_list
@@ -208,8 +213,47 @@ def text_to_children(text: str) -> list[LeafNode]:
 def parse_code_block(text: str) -> str:
     code: str = ""
 
+    #remove "```\n"
     for i in range (len(text)):
         if text[i] != "`":
-            code += text[i]
-    #print(code)
+            if text[i] == "\n" and text[i-1] == "`":
+                pass
+            else:
+                code += text[i]
     return code
+
+def parse_ul_block(text: str) -> str:
+    new_str: str = ""
+
+    for i in range(len(text)):
+        if text[i] == "-" or text[i] == "\n":
+            new_str += f"<li>{text[i]}"
+        else:
+            new_str += text[i]
+    new_str += "<li>"
+    return new_str
+
+def parse_ol_block(text: str) -> str:
+    new_str: str = ""
+
+    for i in range(len(text)):
+        if text[i].isdigit():
+            if i+2 < len(text) and text[i+1] == "." and text[i+2] == " ":
+                new_str += f"<li>{text[i]}"
+            else:
+                new_str += text[i]
+        elif text[i] == "\n":
+            new_str += f"<li>{text[i]}"
+        else:
+            new_str += text[i]
+    new_str += "<li>"
+    return new_str
+
+def parse_heading(text: str) -> str:
+    i: int = 0
+
+    while text[i] != " ":
+        i += 1
+
+    return f"h{i}"
+            
