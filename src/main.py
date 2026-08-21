@@ -1,5 +1,5 @@
 from textnode import *
-from copystatic import *
+from builder import *
 
 def main():
         CopyStatic()

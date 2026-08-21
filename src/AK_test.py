@@ -4,9 +4,9 @@ from htmlnode import *
 from textnode import *
 from functions import *
 from block_functions import *
-#from ..src import *
+from builder import *
 
-test: int = 14
+test: int = 16
 
 if test == 0:
     node = ParentNode(
@@ -188,3 +188,13 @@ elif test == 14:
     node = markdown_to_html_node(md)
     html = node.to_html()
     print(html)
+
+elif test == 15:
+    md = "# HEADING 1"
+
+    a = extract_title(md)
+    print(a)
+
+elif test == 16:
+    from_path = "/home/akozbial/boot.dev/projects/Static_Site/content/index.md"
+    a = generate_page(from_path, "b", "c")
