@@ -181,7 +181,6 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
 
         if block_type == BlockType.PARAGRAPH:
             children: list[LeafNode] = text_to_children(block.replace("\n", " "))
-            #print(f"children: {children}")
             parent_nodes.append(ParentNode("p", children))
         elif block_type == BlockType.CODE: #do not use text_to_textnodes b/c code should remain as-is
             leaf_node: LeafNode = text_node_to_html_node(TextNode(parse_code_block(block), TextType.CODE))

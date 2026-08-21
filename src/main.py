@@ -1,8 +1,8 @@
 from textnode import *
+from copystatic import *
 
 def main():
-        text_node = TextNode("MY TEXT", TextType.LINK, "https://www.boot.dev")
-        print(text_node)
+        CopyStatic()
 
 if __name__ == "__main__":
         main()
