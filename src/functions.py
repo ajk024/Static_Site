@@ -185,8 +185,14 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
         elif block_type == BlockType.CODE: #do not use text_to_textnodes b/c code should remain as-is
             leaf_node: LeafNode = text_node_to_html_node(TextNode(parse_code_block(block), TextType.CODE))
             parent_nodes.append(ParentNode("pre", [leaf_node]))
+        elif block_type == BlockType.HEADING:
+            heading_tag: str = parse_heading_tag(block)
+            heading_value: str = parse_heading_value(block)
+            children: list[LeafNode] = text_to_children(heading_value)
+            parent_nodes.append(ParentNode(heading_tag, children))
         elif block_type == BlockType.QUOTE:
-            children: list[LeafNode] = text_to_children(block)
+            quote_value: str = parse_quote_value(block)
+            children: list[LeafNode] = text_to_children(quote_value)
             parent_nodes.append(ParentNode("blockquote", children))
         elif block_type == BlockType.UNORDERED_LIST:
             children: list[LeafNode] = text_to_children(parse_ul_block(block))
@@ -194,10 +200,6 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
         elif block_type == BlockType.ORDERED_LIST:
             children: list[LeafNode] = text_to_children(parse_ol_block(block))
             parent_nodes.append(ParentNode("ol", children))
-        elif block_type == BlockType.HEADING:
-            heading_tag: str = parse_heading(block)
-            children: list[LeafNode] = text_to_children(block)
-            parent_nodes.append(ParentNode(heading_tag, children))
     html_node: ParentNode = ParentNode("div", parent_nodes)
     return html_node
 
@@ -225,11 +227,15 @@ def parse_ul_block(text: str) -> str:
     new_str: str = ""
 
     for i in range(len(text)):
-        if text[i] == "-" or text[i] == "\n":
-            new_str += f"<li>{text[i]}"
+        if text[i] == "-":
+            new_str += "<li>"
+        elif text[i] == "\n":
+            new_str += "</li>"
+        elif text[i] == " " and text[i-1] == "-":
+            pass
         else:
             new_str += text[i]
-    new_str += "<li>"
+    new_str += "</li>"
     return new_str
 
 def parse_ol_block(text: str) -> str:
@@ -237,22 +243,43 @@ def parse_ol_block(text: str) -> str:
 
     for i in range(len(text)):
         if text[i].isdigit():
-            if i+2 < len(text) and text[i+1] == "." and text[i+2] == " ":
-                new_str += f"<li>{text[i]}"
-            else:
-                new_str += text[i]
+            new_str += "<li>"
         elif text[i] == "\n":
-            new_str += f"<li>{text[i]}"
+            new_str += "</li>"
+        elif text[i] == "." and text[i-1].isdigit():
+            pass
+        elif text[i] == " " and text[i-1] == ".":
+            pass
         else:
             new_str += text[i]
-    new_str += "<li>"
+    new_str += "</li>"
     return new_str
 
-def parse_heading(text: str) -> str:
-    i: int = 0
+def parse_quote_value(text: str) -> str: #return quote value without markdown formatting
+    value: str = ""
+    for i in range (len(text)):
+        if text[i] == ">":
+            pass
+        elif text[i] == " " and text[i-1] == ">":
+            pass
+        else:
+            value += text[i]
+    return value
 
+def parse_heading_tag(text: str) -> str: #return heading tag
+    i: int = 0
     while text[i] != " ":
         i += 1
-
     return f"h{i}"
+
+def parse_heading_value(text: str) -> str: #return heading value without markdown formatting
+    value: str = ""
+    i = 0
+    while i < len(text) and text[i] != " ":
+        i += 1
+    i += 1
+    while i < len(text):
+        value += text[i]
+        i += 1
+    return value
             

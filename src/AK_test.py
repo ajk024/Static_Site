@@ -197,4 +197,6 @@ elif test == 15:
 
 elif test == 16:
     from_path = "/home/akozbial/boot.dev/projects/Static_Site/content/index.md"
-    a = generate_page(from_path, "b", "c")
+    template_path = "/home/akozbial/boot.dev/projects/Static_Site/template.html"
+    dest_path = "/home/akozbial/boot.dev/projects/Static_Site/public/index.html"
+    a = generate_page(from_path, template_path, dest_path)
