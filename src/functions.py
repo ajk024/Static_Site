@@ -63,7 +63,8 @@ def split_nodes_delimiter(old_nodes: list[TextNode],
         else:
             while i < len(node.text):
                 if node.text[i] == delimiter: #end of text before delimiter #just one character
-                    new_list.append(TextNode(text, node.text_type))
+                    if text:
+                        new_list.append(TextNode(text, node.text_type))
                     text = ""
 
                     if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
@@ -75,7 +76,8 @@ def split_nodes_delimiter(old_nodes: list[TextNode],
                         text += node.text[i]
                         i += 1
 
-                    new_list.append(TextNode(text, text_type))
+                    if text:
+                        new_list.append(TextNode(text, text_type))
                     text = ""
 
                     if i+1 < len(node.text) and node.text[i] == "*" and node.text[i+1] == "*":
@@ -86,7 +88,8 @@ def split_nodes_delimiter(old_nodes: list[TextNode],
                     text += node.text[i]
                     i += 1
 
-            new_list.append(TextNode(text, node.text_type))
+            if text:
+                new_list.append(TextNode(text, node.text_type))
             i = 0
             text = ""
     return new_list
@@ -105,7 +108,8 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
             while i < len(node.text):
                 if node.text[i] == "!":
                     if len(text) > 0:
-                        new_list.append(TextNode(text, node.text_type)) #text before image
+                        if text:
+                            new_list.append(TextNode(text, node.text_type)) #text before image
                     new_list.append(TextNode(image_list[0][0], TextType.IMAGE, image_list[0][1])) #image
 
                     while i < len(node.text) and node.text[i] != ")":
@@ -136,7 +140,8 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             while i < len(node.text):
                 if node.text[i] == "[":
                     if len(text) > 0:
-                        new_list.append(TextNode(text, node.text_type))
+                        if text:
+                            new_list.append(TextNode(text, node.text_type))
                     new_list.append(TextNode(link_list[0][0], TextType.LINK, link_list[0][1])) #link
 
                     while i < len(node.text) and node.text[i] != ")":

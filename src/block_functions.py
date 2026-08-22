@@ -21,17 +21,19 @@ def block_to_block_type(mdblock: str) -> BlockType:
             raise Exception("Invalid heading block syntax")
 
     #check for code
-    elif mdblock[0] == "`": #if mdblock[i:i+3] == "```" and mdblock[i+3] == "\n":
-        if mdblock[0: 4] == "```\n":
-            i = 5
-            while i < len(mdblock) and mdblock[i] != "`":
-                i += 1
-            if i+2 < len(mdblock): #check for 3 additional backticks
-                if mdblock[i] == "`" and mdblock[i+1] == "`" and mdblock[i+2] == "`":
-                    return BlockType.CODE
-                raise Exception("Invalid code block syntax 3")
-            raise Exception("Invalid code block syntax 2")
-        raise Exception("Invalid code block syntax 1")
+    elif mdblock.startswith("```"):
+        if not mdblock.startswith("```\n"):
+            raise Exception("Invalid code block syntax 1")
+        i = 4
+        while i < len(mdblock) and mdblock[i] != "`":
+            i += 1
+        if (
+            i+2 < len(mdblock)
+            and mdblock[i:i+3] == "```"
+        ):
+            return BlockType.CODE
+        raise Exception("Invalid code block syntax 2")
+        
 
     #check for quote
     elif mdblock[0] == ">":

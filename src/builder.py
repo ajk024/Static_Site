@@ -69,4 +69,53 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     if not dest_path.exists():
         dest_path.write_text(new_page)
 
-    
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path) -> None:
+    content_dir: list[str] = os.listdir(dir_path_content)
+    print(content_dir)
+
+    try:
+        file = open(template_path, mode='r')
+    except OSError:
+        raise Exception(f"unable to openfile at {template_path}")
+    template: str = file.read()
+    file.close()
+
+    for item in content_dir:
+        path: str = dir_path_content + item
+        #print(path)
+        if os.path.isfile(path):
+            try:
+                file = open(path, mode='r')
+            except OSError:
+                raise Exception(f"Unable to open file at {path}.")
+            md: str = file.read()
+            file.close()
+
+            #convert markdown to html string
+            node = markdown_to_html_node(md)
+            html: str = node.to_html()
+        
+            title: str = extract_title(md)
+        
+            #replace title and html content placeholders in template with values extracted above
+            new_page:str = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+            
+            #file will not be in public because CopyStatic() is called first in main.py
+            os.makedirs(dest_dir_path, exist_ok=True)
+
+            #change file extension from .md to .html
+            dest_path = Path(dest_dir_path + item)
+            if dest_path.suffix == ".md":
+                dest_path = dest_path.with_suffix(".html")
+            print(dest_path)
+            
+            try:
+                dest_path.write_text(new_page)
+            except FileNotFoundError:
+                raise Exception(f"Unable to write file at {dest_path}")
+            
+        elif os.path.isdir(path):
+            new_dir_path_content = dir_path_content + item + "/"
+            new_dest_dir_path = dest_dir_path + item + "/"
+            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path)
+
